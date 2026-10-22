@@ -12,26 +12,17 @@ import java.util.List;
 
 public interface ContributionRepository extends JpaRepository<Contribution, Integer> {
 
-    // ---------- Requetes derivees (Spring ecrit le SQL a partir du nom) ----------
-
-    // "Mes contributions" triees par date (la plus recente en premier)
     List<Contribution> findByUtilisateurIdOrderByDateContribDesc(Integer utilisateurId);
 
-    // "Mes contributions" triees par nom de projet, puis par date
     List<Contribution> findByUtilisateurIdOrderByProjetNomAscDateContribDesc(Integer utilisateurId);
 
-    // Detail d'un projet : ses contributions
     List<Contribution> findByProjetIdOrderByDateContribDesc(Integer projetId);
 
-    // Responsable : toutes les contributions
     List<Contribution> findAllByOrderByDateContribDesc();
 
-    // Avant de supprimer un utilisateur : a-t-il des contributions ?
     boolean existsByUtilisateurId(Integer utilisateurId);
 
-    // ---------- Requetes JPQL (@Query) pour les calculs ----------
-
-    // Temps consomme sur un projet, en minutes (0 si aucune contribution)
+    // Temps consomme sur un projet, en minutes
     @Query("SELECT COALESCE(SUM(c.dureeMinutes), 0L) FROM Contribution c WHERE c.projet.id = :projetId")
     Long totalMinutesParProjet(@Param("projetId") Integer projetId);
 

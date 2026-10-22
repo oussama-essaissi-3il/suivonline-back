@@ -29,16 +29,14 @@ public class Projet {
     @Column(nullable = false, length = 20)
     private StatutProjet statut;
 
-    // Remplie au moment de la cloture (pour "projets clotures recemment")
     @Column(name = "date_cloture")
     private LocalDate dateCloture;
 
-    // Relation 1,n : plusieurs projets sur un serveur
     @ManyToOne
     @JoinColumn(name = "id_serveur", nullable = false)
     private Serveur serveur;
 
-    // Cote "inverse" de la relation n,n : c'est Utilisateur.projets qui gere la table affectation
+
     @ManyToMany(mappedBy = "projets")
     @Builder.Default
     private Set<Utilisateur> utilisateurs = new HashSet<>();

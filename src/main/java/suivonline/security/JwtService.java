@@ -17,7 +17,6 @@ public class JwtService {
     private final SecretKey cle;
     private final long expirationMs;
 
-    // @Value lit les valeurs dans application.properties (etape 1)
     public JwtService(@Value("${jwt.secret}") String secret,
                       @Value("${jwt.expiration-ms}") long expirationMs) {
         this.cle = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -34,8 +33,6 @@ public class JwtService {
                 .compact();
     }
 
-    // Verifie la signature et la date d'expiration, puis renvoie le contenu du token.
-    // Si le token est faux ou expire -> une exception est levee
     public Claims lireToken(String token) {
         return Jwts.parser().verifyWith(cle).build()
                 .parseSignedClaims(token)

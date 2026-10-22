@@ -14,7 +14,6 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
-    // GET /api/dashboard?debut=2026-10-01&fin=2026-10-31  (les dates sont facultatives)
     @GetMapping
     public DashboardDto dashboard(@RequestParam(required = false) LocalDate debut,
                                   @RequestParam(required = false) LocalDate fin) {

@@ -31,7 +31,6 @@ public class Utilisateur {
     @Column(nullable = false, length = 20)
     private Role role;
 
-    // Relation n:n avec Projet, via la table affectation (sans colonne propre)
     @ManyToMany
     @JoinTable(
             name = "affectation",

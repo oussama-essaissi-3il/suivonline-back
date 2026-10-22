@@ -31,11 +31,11 @@ public class ServeurService {
         Serveur s = trouver(id);
         s.setNom(req.nom());
         s.setDescription(req.description());
-        return ServeurDto.from(s);   // pas de save() : @Transactional sauvegarde tout seul
+        return ServeurDto.from(s);
     }
 
     public void supprimer(Integer id) {
-        // Sinon la base refuserait (cle etrangere projet.id_serveur)
+
         if (projetRepository.existsByServeurId(id)) {
             throw new RegleMetierException("Ce serveur heberge encore des projets");
         }

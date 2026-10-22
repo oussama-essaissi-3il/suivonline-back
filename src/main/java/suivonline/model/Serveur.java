@@ -20,7 +20,6 @@ public class Serveur {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    // Cote inverse de la relation 1,n (Projet.serveur est le cote proprietaire)
     @OneToMany(mappedBy = "serveur")
     private List<Projet> projets;
 }

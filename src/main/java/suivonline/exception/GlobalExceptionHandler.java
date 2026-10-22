@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import suivonline.dto.ErreurDto;
 
-// Transforme les exceptions de tous les controllers en JSON { status, message, date }
+// Transforme les exceptions de tous les controllers en JSON
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -31,7 +31,6 @@ public class GlobalExceptionHandler {
         return reponse(HttpStatus.UNAUTHORIZED, e.getMessage());     // 401
     }
 
-    // Echec de @Valid (champ vide, email invalide...) -> 400
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErreurDto> validation(MethodArgumentNotValidException e) {
         return reponse(HttpStatus.BAD_REQUEST, "Donnees invalides : " + e.getBindingResult().getFieldError().getField());

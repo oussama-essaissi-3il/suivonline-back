@@ -21,7 +21,6 @@ public class ProjetService {
     private final ServeurService serveurService;
     private final UtilisateurService utilisateurService;
 
-    // ----- Lecture -----
 
     public List<ProjetDto> lister() {
         return projetRepository.findAll().stream().map(this::versDto).toList();
@@ -43,7 +42,6 @@ public class ProjetService {
                 .stream().map(this::versDto).toList();
     }
 
-    // ----- Creation / modification -----
 
     public ProjetDto creer(ProjetRequest req) {
         Projet p = Projet.builder()
@@ -56,7 +54,6 @@ public class ProjetService {
         return versDto(projetRepository.save(p));
     }
 
-    // Sert aussi a "modifier le quota d'heures" demande par le sujet
     public ProjetDto modifier(Integer id, ProjetRequest req) {
         Projet p = trouver(id);
         p.setNom(req.nom());
@@ -66,7 +63,6 @@ public class ProjetService {
         return versDto(p);
     }
 
-    // REGLE : le responsable peut cloturer un projet
     public ProjetDto cloturer(Integer id) {
         Projet p = trouver(id);
         p.setStatut(StatutProjet.CLOTURE);
@@ -74,13 +70,12 @@ public class ProjetService {
         return versDto(p);
     }
 
-    // ----- Affectations (relation n,n) -----
 
     public ProjetDetailDto affecter(Integer projetId, Integer utilisateurId) {
         Projet p = trouver(projetId);
         Utilisateur u = utilisateurService.trouver(utilisateurId);
-        u.getProjets().add(p);         // cote PROPRIETAIRE -> ecrit dans la table affectation
-        p.getUtilisateurs().add(u);    // cote inverse -> garde l'objet Java coherent
+        u.getProjets().add(p);
+        p.getUtilisateurs().add(u);
         return detail(projetId);
     }
 
@@ -92,15 +87,12 @@ public class ProjetService {
         return detail(projetId);
     }
 
-    // ----- Utilitaires -----
 
     Projet trouver(Integer id) {
         return projetRepository.findById(id)
                 .orElseThrow(() -> new RessourceIntrouvableException("Projet introuvable"));
     }
 
-    // REGLE : depassement = temps consomme > quota.
-    // Quota en HEURES, contributions en MINUTES -> on multiplie le quota par 60
     ProjetDto versDto(Projet p) {
         long minutes = contributionRepository.totalMinutesParProjet(p.getId());
         boolean depassement = minutes > p.getQuotaHeures() * 60L;

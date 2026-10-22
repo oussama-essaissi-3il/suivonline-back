@@ -8,7 +8,7 @@ import suivonline.model.Role;
 import suivonline.model.Utilisateur;
 import suivonline.repository.UtilisateurRepository;
 
-// CommandLineRunner : la methode run() s'execute une fois, au demarrage de l'application
+// CommandLineRunner
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -18,7 +18,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Seulement si aucun compte n'existe (sinon on ne touche a rien)
+        // Seulement si aucun compte n'existe
         if (utilisateurRepository.count() == 0) {
             utilisateurRepository.save(Utilisateur.builder()
                     .nom("Admin")

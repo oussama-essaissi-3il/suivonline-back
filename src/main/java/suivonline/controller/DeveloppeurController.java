@@ -10,7 +10,6 @@ import suivonline.service.*;
 
 import java.util.List;
 
-// /api/me/... : "MES" donnees. L'utilisateur est deduit du TOKEN, jamais de l'URL
 @RestController
 @RequestMapping("/api/me")
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class DeveloppeurController {
         return projetService.projetsDuDeveloppeur(monId(auth));
     }
 
-    // Mes contributions : ?tri=date (par defaut) ou ?tri=projet
+    // Mes contributions
     @GetMapping("/contributions")
     public List<ContributionDto> mesContributions(Authentication auth,
                                                   @RequestParam(defaultValue = "date") String tri) {
@@ -46,7 +45,7 @@ public class DeveloppeurController {
         return contributionService.recap(monId(auth));
     }
 
-    // auth.getName() = l'email mis dans le token -> on retrouve l'id
+
     private Integer monId(Authentication auth) {
         return authService.utilisateurConnecte(auth.getName()).getId();
     }

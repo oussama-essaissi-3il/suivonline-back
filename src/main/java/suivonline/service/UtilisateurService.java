@@ -25,7 +25,6 @@ public class UtilisateurService {
     }
 
     public UtilisateurDto creer(UtilisateurRequest req) {
-        // L'email est UNIQUE en base : on verifie avant pour renvoyer un message clair
         if (utilisateurRepository.existsByEmail(req.email())) {
             throw new RegleMetierException("Cet email est deja utilise");
         }
@@ -33,7 +32,7 @@ public class UtilisateurService {
                 .nom(req.nom())
                 .prenom(req.prenom())
                 .email(req.email())
-                .motPasse(passwordEncoder.encode(req.motPasse()))   // on stocke le HASH
+                .motPasse(passwordEncoder.encode(req.motPasse()))
                 .role(req.role())
                 .build();
         return UtilisateurDto.from(utilisateurRepository.save(u));
@@ -53,11 +52,10 @@ public class UtilisateurService {
     }
 
     public void supprimer(Integer id) {
-        // Sinon la base refuserait (cle etrangere contribution.id_utilisateur)
         if (contributionRepository.existsByUtilisateurId(id)) {
             throw new RegleMetierException("Cet utilisateur a des contributions, suppression impossible");
         }
-        utilisateurRepository.delete(trouver(id));   // ses affectations partent avec lui
+        utilisateurRepository.delete(trouver(id));
     }
 
     Utilisateur trouver(Integer id) {

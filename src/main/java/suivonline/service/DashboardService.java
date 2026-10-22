@@ -20,18 +20,14 @@ public class DashboardService {
     private final ProjetService projetService;
 
     public DashboardDto dashboard(LocalDate debut, LocalDate fin) {
-        // Periode par defaut : du 1er du mois a aujourd'hui
         if (debut == null) debut = LocalDate.now().withDayOfMonth(1);
         if (fin == null) fin = LocalDate.now();
 
-        // 1) Temps total par developpeur sur la periode
         List<TempsDeveloppeurDto> tempsParDev = contributionRepository.tempsParDeveloppeur(debut, fin);
 
-        // 2) Projets en depassement
         List<ProjetDto> enDepassement = projetService.lister().stream()
                 .filter(ProjetDto::enDepassement).toList();
 
-        // 3) Projets clotures recemment (= dans les 30 derniers jours)
         List<ProjetDto> clotures = projetRepository
                 .findByStatutAndDateClotureGreaterThanEqualOrderByDateClotureDesc(
                         StatutProjet.CLOTURE, LocalDate.now().minusDays(30))

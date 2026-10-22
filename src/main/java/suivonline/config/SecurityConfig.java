@@ -26,31 +26,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())                 // inutile avec un JWT
-                .cors(Customizer.withDefaults())              // autorise le front (voir plus bas)
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // QUI a acces a QUOI (lu de haut en bas)
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login").permitAll()// tout le monde
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/me/**").hasRole("DEVELOPPEUR")   // espace developpeur
-                        .requestMatchers("/api/**").hasRole("RESPONSABLE")      // tout le reste
+                        .requestMatchers("/api/me/**").hasRole("DEVELOPPEUR")
+                        .requestMatchers("/api/**").hasRole("RESPONSABLE")
                         .anyRequest().authenticated())
                 // Pas connecte -> 401
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                // Notre filtre JWT passe avant les filtres de Spring
                 .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Pour hacher les mots de passe (on ne les stocke jamais en clair)
+    // Pour hacher les mots de passe
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // CORS : le front (localhost:3000) a le droit d'appeler le back (localhost:8080)
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource(@Value("${app.front-url}") String frontUrl) {
         CorsConfiguration config = new CorsConfiguration();

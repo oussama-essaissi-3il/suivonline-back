@@ -4,8 +4,6 @@ import suivonline.model.Contribution;
 
 import java.time.LocalDate;
 
-// On "aplatit" : au lieu d'envoyer tout l'objet Projet et tout l'objet Utilisateur,
-// on envoie juste leur id et leur nom
 public record ContributionDto(
         Integer id,
         Integer dureeMinutes,

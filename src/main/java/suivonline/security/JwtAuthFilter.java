@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-// Execute AVANT chaque requete : lit le token et dit a Spring qui est connecte
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -34,14 +33,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String email = claims.getSubject();
                 String role = claims.get("role", String.class);
 
-                // On declare a Spring : "cette requete vient de <email>, avec le role ROLE_<role>"
                 var auth = new UsernamePasswordAuthenticationToken(
                         email, null, List.of(new SimpleGrantedAuthority("ROLE_" + role)));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
-                // Token invalide ou expire : on ne connecte personne -> Spring renverra 401
+
             }
         }
-        chain.doFilter(request, response); // on laisse la requete continuer
+        chain.doFilter(request, response);
     }
 }

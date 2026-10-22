@@ -13,7 +13,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // POST /api/auth/login   { "email": "...", "motPasse": "..." }
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest req) {
         return authService.login(req);
